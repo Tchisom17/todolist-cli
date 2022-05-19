@@ -31,7 +31,7 @@ func (t Todolist) Read() {
 	_ = json.Unmarshal(doc, &todos)
 }
 
-func (t *Todolist) Clear() {
+func (t Todolist) Clear() {
 	for i:=0; i<len(todos); i++ {
 		if todos[i].Completed && i != len(todos)-1{
 			todos = append(todos[:i], todos[i+1:]...)
@@ -43,7 +43,7 @@ func (t *Todolist) Clear() {
 
 	t.Write()
 }
-func (t *Todolist) Add(title string) {
+func (t Todolist) Add(title string) {
 	if title == "" {
 		fmt.Println("Task cannot be empty")
 	}
@@ -74,7 +74,7 @@ func (t Todolist) Undone(val int) {
 	}
 }
 func (t Todolist) List() {
-	for i, v:= range todos {
+	for i, v := range todos {
 		switch v.Completed {
 		case true:
 			fmt.Printf("%d(*)\t %v\n", i+1, v.Task)
@@ -82,4 +82,12 @@ func (t Todolist) List() {
 			fmt.Printf("%d\t %v\n", i+1, v.Task)
 		}
 	}
+}
+func(t Todolist) AddTodoWithTerm(title string) {
+	if title == "" {
+		fmt.Println("Task cannot be empty")
+	}
+	list := Todolist{Task: title}
+	todos = append(todos, list)
+	t.Write()
 }
