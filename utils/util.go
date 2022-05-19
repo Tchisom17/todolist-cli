@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 )
+
 type Todolist struct {
 	Task 		string
 	Completed	bool
@@ -40,15 +41,18 @@ func (t *Todolist) Clear() {
 		}
 	}
 
-	t.write()
+	t.Write()
 }
-func (t Todolist) Add(title string) {
+func (t *Todolist) Add(title string) {
+	if title == "" {
+		fmt.Println("Task cannot be empty")
+	}
 	list := Todolist{Task: title}
 	todos = append(todos, list)
-	t.write()
+	t.Write()
 }
 
-func (t Todolist) write() {
+func (t Todolist) Write() {
 	res, _ := json.MarshalIndent(todos, "", "  ")
 	_ = ioutil.WriteFile(doc, res, 0666)
 }
@@ -58,7 +62,7 @@ func (t Todolist) Done(val int) {
 		log.Println("Index out of range")
 	} else {
 		todos[val - 1].Completed = true
-		t.write()
+		t.Write()
 	}
 }
 func (t Todolist) Undone(val int) {
@@ -66,15 +70,16 @@ func (t Todolist) Undone(val int) {
 		log.Println("Index out of range")
 	} else {
 		todos[val - 1].Completed = false
-		t.write()
+		t.Write()
 	}
 }
 func (t Todolist) List() {
 	for i, v:= range todos {
-		if v.Completed {
-			continue
+		switch v.Completed {
+		case true:
+			fmt.Printf("%d(*)\t %v\n", i+1, v.Task)
+		default:
+			fmt.Printf("%d\t %v\n", i+1, v.Task)
 		}
-		fmt.Printf("%d\t %v\n", i+1, v.Task)
 	}
 }
-

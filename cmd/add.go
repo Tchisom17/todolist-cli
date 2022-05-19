@@ -11,10 +11,16 @@ var addCmd = &cobra.Command{
 	Short: "Add todo to list",
 	Long: `Add todo to list.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		utils.Todo.Add(args[0])
+		todo, _ := cmd.Flags().GetString("add")
+		if todo != "" {
+			utils.Todo.AddTodoWithTerm(todo)
+		}else {
+			utils.Todo.Add(args[0])
+		}
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(addCmd)
+	addCmd.PersistentFlags().String("add", "", "Add todo to list.")
 }
