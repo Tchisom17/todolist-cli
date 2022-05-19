@@ -1,10 +1,13 @@
 package utils
 
 import (
+	"bufio"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
+	"os"
+	"strings"
 )
 
 type Todolist struct {
@@ -83,11 +86,8 @@ func (t Todolist) List() {
 		}
 	}
 }
-func(t Todolist) AddTodoWithTerm(title string) {
-	if title == "" {
-		fmt.Println("Task cannot be empty")
-	}
-	list := Todolist{Task: title}
-	todos = append(todos, list)
-	t.Write()
+func AddTodoWithTerm() string{
+	reader := bufio.NewReader(os.Stdin)
+	text, _ := reader.ReadString('\n')
+	return strings.TrimSpace(text)
 }
