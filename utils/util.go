@@ -69,7 +69,7 @@ func (t Todolist) Write() {
 
 func (t Todolist) Done(val int) {
 	if len(todos) < val {
-		log.Println("Index out of range")
+		fmt.Println("Index out of range")
 	} else {
 		todos[val - 1].Completed = true
 		t.Write()
@@ -77,7 +77,7 @@ func (t Todolist) Done(val int) {
 }
 func (t Todolist) Undone(val int) {
 	if len(todos) < val {
-		log.Println("Index out of range")
+		fmt.Println("Index out of range")
 	} else {
 		todos[val - 1].Completed = false
 		t.Write()
