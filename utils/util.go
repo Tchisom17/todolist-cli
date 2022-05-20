@@ -11,13 +11,13 @@ import (
 )
 
 type Todolist struct {
-	Task 		string
-	Completed	bool
+	Task 		string	`json:"task"`
+	Completed	bool	`json:"completed"`
 }
 
+const doc = "todo.json"
 var (
 	todos = []Todolist{}
-	doc = "todo.json"
 	Todo = Todolist{}
 )
 
@@ -26,12 +26,14 @@ func init()  {
 }
 
 func (t Todolist) Read() {
-	doc, err := ioutil.ReadFile("todo.json")
+	file, err := ioutil.ReadFile(doc)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	_ = json.Unmarshal(doc, &todos)
+	if err = json.Unmarshal(file, &todos); err != nil {
+		log.Fatal(err)
+	}
 }
 
 func (t Todolist) Clear() {
@@ -56,8 +58,13 @@ func (t Todolist) Add(title string) {
 }
 
 func (t Todolist) Write() {
-	res, _ := json.MarshalIndent(todos, "", "  ")
-	_ = ioutil.WriteFile(doc, res, 0666)
+	res, err := json.MarshalIndent(todos, "", "  ")
+	if err != nil {
+		log.Fatal(err)
+	}
+	if err = ioutil.WriteFile(doc, res, 0666); err != nil {
+		log.Fatal(err)
+	}
 }
 
 func (t Todolist) Done(val int) {
